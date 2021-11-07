@@ -1,10 +1,9 @@
 #include <stdio.h>
-#include<string.h>
 #include <stdint.h>
 
 typedef uint8_t initial[4][4];
 
-static initial keySchedule[10];
+static initial keySchedule[11];
 
 //TODO remove and accept input
 
@@ -43,6 +42,9 @@ static const uint8_t s_box[16][16] = {
         {0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf},
         {0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16}
 };
+
+//s_box inverted. The index position of the above S_box are now the values and vice versa. Code retrieved from: https://github.com/kokke/tiny-AES-c/blob/master/aes.c
+
 static const uint8_t invs_box[16][16] = {
         {0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb},
         {0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb},
@@ -199,11 +201,9 @@ int InvSubBytes() {
     return 0;
 }
 
-
 int ShiftRows() {
-    //TODO alterar test por matrix
     //Row 2
-    uint8_t temp = 0;
+    uint8_t temp;
     temp = matrix[1][0];
     for (int i = 0; i <= 2; i++) {
         matrix[1][i] = matrix[1][i + 1];
@@ -229,7 +229,34 @@ int ShiftRows() {
     return 0;
 }
 
+int InvShiftRows(){
+    //Row 4
+    uint8_t temp;
+    temp = matrix[3][0];
+    for (int i = 0; i <= 2; i++) {
+        matrix[3][i] = matrix[3][i + 1];
+    }
+    matrix[3][3] = temp;
 
+    //Row 3
+    temp = matrix[2][0];
+    matrix[2][0] = matrix[2][2];
+    matrix[2][2] = temp;
+    temp = matrix[2][1];
+    matrix[2][1] = matrix[2][3];
+    matrix[2][3] = temp;
+
+    //Row 2
+    temp = matrix[1][3];
+    for (int i = 3; i > 0; i--) {
+        uint8_t tmp = matrix[1][i - 1];
+        matrix[1][i] = tmp;
+    }
+    matrix[1][0] = temp;
+
+    return 0;
+
+}
 
 //mixSingleColumn and MixColumns functions were retrieved from: https://github.com/amanske/aes-128/blob/master/aes.cpp
 
@@ -247,10 +274,8 @@ void mixSingleColumn(unsigned char *r) {
     for (c = 0; c < 4; c++) {
         a[c] = r[c];
         /* h is 0xff if the high bit of r[c] is set, 0 otherwise */
-        h = (unsigned char) ((signed char) r[c]
-                >> 7); /* arithmetic right shift, thus shifting in either zeros or ones */
-        b[c] = r[c]
-                << 1; /* implicitly removes high bit because b[c] is an 8-bit char, so we xor by 0x1b and not 0x11b in the next line */
+        h = (unsigned char) ((signed char) r[c]>> 7); /* arithmetic right shift, thus shifting in either zeros or ones */
+        b[c] = r[c]<< 1; /* implicitly removes high bit because b[c] is an 8-bit char, so we xor by 0x1b and not 0x11b in the next line */
         b[c] ^= 0x1B & h; /* Rijndael's Galois field */
     }
     r[0] = b[0] ^ a[3] ^ a[2] ^ b[1] ^ a[1]; /* 2 * a0 + a3 + a2 + 3 * a1 */
@@ -273,8 +298,34 @@ void MixColumns() {
         }
     }
 }
+// xtime, mult and InvMixColumns were adapted from this website: https://www.fourmilab.ch/javascrypt/javascrypt.html
+uint8_t xtime(int poly) {
+    poly <<= 1;
+    return ((poly & 0x100) ? (poly ^ 0x11B) : (poly));
+}
 
-int printTestSchedule() {
+uint8_t multiply(uint8_t x, uint8_t y) {
+    int bit, result = 0;
+
+    for (bit = 1; bit < 256; bit *= 2, y = xtime(y)) {
+        if (x & bit)
+            result ^= y;
+    }
+    return result;
+}
+
+void InvMixColumns() {
+    unsigned char temp[4];
+    for (int j = 0; j < 4; j++) {            // Go through each column...
+        for (int i = 0; i < 4; i++) {        // and for each row in the column...
+            temp[i] = multiply(matrix[i][j], 0xE) ^multiply(matrix[(i+1)%4][j], 0xB) ^multiply(matrix[(i+2)%4][j], 0xD) ^multiply(matrix[(i+3)%4][j], 9);
+        }
+        for (int i = 0; i < 4; i++)          // Place result back into column
+            matrix[i][j] = temp[i];
+    }
+}
+
+void printTestSchedule() {
     printf("%X %X %X %X \n", keySchedule[10][0][0], keySchedule[10][0][1], keySchedule[10][0][2],
            keySchedule[10][0][3]);
     printf("%X %X %X %X \n", keySchedule[10][1][0], keySchedule[10][1][1], keySchedule[10][1][2],
@@ -285,28 +336,23 @@ int printTestSchedule() {
            keySchedule[10][3][3]);
 }
 
-
-int printTest() {
+void printTest() {
     printf("%X %X %X %X \n", matrix[0][0], matrix[0][1], matrix[0][2], matrix[0][3]);
     printf("%X %X %X %X \n", matrix[1][0], matrix[1][1], matrix[1][2], matrix[1][3]);
     printf("%X %X %X %X \n", matrix[2][0], matrix[2][1], matrix[2][2], matrix[2][3]);
     printf("%X %X %X %X \n\n", matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3]);
 }
 
-
 int encrypt() {
-    createKeySchedule();
 
+    createKeySchedule();
     AddRoundKey(0);
 
     for (int i = 1; i < 10; i++) {
         SubBytes();
-
         ShiftRows();
         MixColumns();
         AddRoundKey(i);
-
-
     }
 
     //Last Round
@@ -317,9 +363,51 @@ int encrypt() {
     return 0;
 }
 
-int main() {
+int decrypt(){
+    createKeySchedule();
+
+    AddRoundKey(10);
+    InvShiftRows();
     InvSubBytes();
-    /*encrypt();
-    printTest();*/
+
+    for (int i = 9; i > 0; i--) {
+        AddRoundKey(i);
+        InvMixColumns();
+        InvShiftRows();
+        InvSubBytes();
+    }
+
+    AddRoundKey(0);
+
+    return 0;
+}
+///Another method to decrypt AES
+/*
+int decrypt2(){
+    createKeySchedule();
+    AddRoundKey(10);
+
+    for (int i = 9; i > 0; i--) {
+        InvShiftRows();
+        InvSubBytes();
+        AddRoundKey(i);
+        InvMixColumns();
+    }
+
+    InvShiftRows();
+    InvSubBytes();
+    AddRoundKey(0);
+
+    return 0;
+}
+*/
+
+int main() {
+    printTest();
+    encrypt();
+    printTest();
+    decrypt();
+    printTest();
+    
     return 0;
 }
