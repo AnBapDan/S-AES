@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 typedef uint8_t initial[4][4];
 
@@ -7,18 +8,19 @@ static initial keySchedule[11];
 
 //TODO remove and accept input
 
-static initial matrix = {
+static initial matrix;
+/*static initial matrix = {
         {0x32, 0x88, 0x31, 0xe0},
         {0x43, 0x5a, 0x31, 0x37},
         {0xf6, 0x30, 0x98, 0x07},
         {0xa8, 0x8d, 0xa2, 0x34}
-};
+};*/
 
 static initial key = {
-        {0x2b, 0x28, 0xab, 0x09},
-        {0x7e, 0xae, 0xf7, 0xcf},
-        {0x15, 0xd2, 0x15, 0x4f},
-        {0x16, 0xa6, 0x88, 0x3c}
+        {0x61,0x65,0x69,0x6D},
+        {0x62,0x66,0x6A,0x6E},
+        {0x63,0x67,0x6B,0x6F},
+        {0x64,0x68,0x6C,0x70}
 };
 
 
@@ -62,22 +64,6 @@ static const uint8_t invs_box[16][16] = {
         {0x60, 0x51, 0x7f, 0xa9, 0x19, 0xb5, 0x4a, 0x0d, 0x2d, 0xe5, 0x7a, 0x9f, 0x93, 0xc9, 0x9c, 0xef},
         {0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61},
         {0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d} };
-
-
-//TODO inputs to 16 byte block
-int string_matrix(char string[]) {
-
-    for (int i = 0; i < 4; i++) {
-
-        for (int j = 0; j < 4; j++) {
-            matrix[j][i] = (uint8_t) string[i + j];
-
-        }
-
-    }
-    return 0;
-
-}
 
 int createKeySchedule() {
     //TODO put key automatically instead manual
@@ -402,12 +388,69 @@ int decrypt2(){
 }
 */
 
+
+//TODO inputs to 16 byte block
+int ecb_mode_encrypt() {
+    char string[4096+16];
+    scanf("%s", string);
+    uint8_t size = strlen(string);
+
+    uint8_t output[size];
+
+    //add PKCS#7
+    uint8_t padding = 16-(size%16);
+    if(padding == 0){
+        for(int i = 0; i<16; i++){
+
+            string[size+i] = 0x10;
+        }
+    }
+    else{
+        for(int i = size; i < size+padding; i++ ){
+            string[i]= padding;
+        }
+    }
+
+
+    //insert string into matrix
+    size = strlen(string);
+    int count=0;
+    for(int i = 0; i< size/16; i++){
+        for(int j = 0; j < 4 ; j++){
+            for(int k = 0; k < 4; k++){
+                matrix[k][j]= string[count];
+                count++;
+            }
+        }
+        printTest();
+        encrypt();
+        int count2=0;
+
+        for(int j = 0; j < 4 ; j++){
+            for(int k = 0; k < 4; k++){
+                output[count2] = matrix[k][j];
+                count2++;
+            }
+        }
+
+        for(int j = 0; j< size; j++){
+            printf("%02x ", output[j]);
+        }
+    }
+
+    return 0;
+
+}
+
+
 int main() {
-    printTest();
+    ecb_mode_encrypt();
+
+    /*printTest();
     encrypt();
     printTest();
     decrypt();
-    printTest();
+    printTest();*/
     
     return 0;
 }
