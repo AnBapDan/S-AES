@@ -3,8 +3,18 @@
 #include <stdint.h>
 
 typedef uint8_t initial[4][4];
-static initial matrix;
+
 static initial keySchedule[10];
+
+
+//TODO remove and accept input
+
+static initial matrix = {
+        {0x32, 0x88, 0x31, 0xe0},
+        {0x43, 0x5a, 0x31, 0x37},
+        {0xf6, 0x30, 0x98, 0x07},
+        {0xa8, 0x8d, 0xa2, 0x34}
+};
 
 static initial test = {
         {0x19, 0xa0, 0x9a, 0xe9},
@@ -28,12 +38,6 @@ static initial key = {
         {0x16, 0xa6, 0x88, 0x3c}
 };
 
-static initial secondKey = {
-        {0xa0, 0x88, 0x23, 0x2a},
-        {0xfa, 0x54, 0xa3, 0x6c},
-        {0xfe, 0x2c, 0x36, 0x76},
-        {0x17, 0xb1, 0x36, 0x05}
-};
 
 static uint8_t rcon[10] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
 
@@ -80,7 +84,7 @@ int createKeySchedule() {
         }
     }
 
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 10; i++) {
         //last column shift rows up by 1
         uint8_t shifted[4];
 
@@ -225,10 +229,10 @@ int MixColumns() {
 }
 
 int printTestSchedule() {
-    printf("%X %X %X %X \n", keySchedule[3][0][0], keySchedule[3][0][1], keySchedule[3][0][2], keySchedule[3][0][3]);
-    printf("%X %X %X %X \n", keySchedule[3][1][0], keySchedule[3][1][1], keySchedule[3][1][2], keySchedule[3][1][3]);
-    printf("%X %X %X %X \n", keySchedule[3][2][0], keySchedule[3][2][1], keySchedule[3][2][2], keySchedule[3][2][3]);
-    printf("%X %X %X %X \n\n", keySchedule[3][3][0], keySchedule[3][3][1], keySchedule[3][3][2], keySchedule[3][3][3]);
+    printf("%X %X %X %X \n", keySchedule[10][0][0], keySchedule[10][0][1], keySchedule[10][0][2], keySchedule[10][0][3]);
+    printf("%X %X %X %X \n", keySchedule[10][1][0], keySchedule[10][1][1], keySchedule[10][1][2], keySchedule[10][1][3]);
+    printf("%X %X %X %X \n", keySchedule[10][2][0], keySchedule[10][2][1], keySchedule[10][2][2], keySchedule[10][2][3]);
+    printf("%X %X %X %X \n\n", keySchedule[10][3][0], keySchedule[10][3][1], keySchedule[10][3][2], keySchedule[10][3][3]);
 }
 
 
@@ -237,6 +241,21 @@ int printTest() {
     printf("%X %X %X %X \n", test[1][0], test[1][1], test[1][2], test[1][3]);
     printf("%X %X %X %X \n", test[2][0], test[2][1], test[2][2], test[2][3]);
     printf("%X %X %X %X \n\n", test[3][0], test[3][1], test[3][2], test[3][3]);
+}
+
+
+int encrypt(){
+    createKeySchedule();
+
+    AddRoundKey();
+
+    for(int i = 0; i<9;i++){
+        SubBytes();
+
+    }
+
+
+    return 0;
 }
 
 int main() {
@@ -249,6 +268,5 @@ int main() {
     MixColumns();
     AddRoundKey();
     printTest();*/
-    //string_matrix("Hello World!95954148");*/
     return 0;
 }
