@@ -388,33 +388,67 @@ int decrypt2(){
 }
 */
 
+int ecb_mode_decrypt(uint8_t string[4096+16]){
 
-//TODO inputs to 16 byte block
+
+    uint8_t output[strlen(string)];
+    //insert string into matrix
+    //printf("%d AQUIIII \n", strlen(string));
+    uint8_t padding;
+    int count=0;
+    int count2=0;
+    for(int i = 0; i< strlen(string)/16; i++){
+        for(int j = 0; j < 4 ; j++){
+            for(int k = 0; k < 4; k++){
+                matrix[k][j]= string[count];
+                count++;
+            }
+        }
+
+        decrypt();
+        //printTest();
+        for(int j = 0; j < 4 ; j++){
+            if(count2 == strlen(string) - padding){
+                break;
+            }
+            for(int k = 0; k < 4; k++){
+                output[count2] = matrix[k][j];
+                count2++;
+            }
+        }
+    }
+    padding = output[strlen(string)-1];
+    //printf("%X", padding);
+
+    for(int j = 0; j < strlen(string)-padding; j++){
+        //printf("%02x ", output[j]);
+    }
+
+
+    return 0;
+}
+
 int ecb_mode_encrypt() {
     char string[4096+16];
     scanf("%s", string);
     uint8_t size = strlen(string);
 
-    uint8_t output[size];
+
 
     //add PKCS#7
     uint8_t padding = 16-(size%16);
-    if(padding == 0){
-        for(int i = 0; i<16; i++){
 
-            string[size+i] = 0x10;
-        }
+    for(int i = size; i < size+padding; i++ )
+    {
+        string[i]= padding;
     }
-    else{
-        for(int i = size; i < size+padding; i++ ){
-            string[i]= padding;
-        }
-    }
-
-
     //insert string into matrix
     size = strlen(string);
+
+    uint8_t output[size-1];
+
     int count=0;
+    int count2=0;
     for(int i = 0; i< size/16; i++){
         for(int j = 0; j < 4 ; j++){
             for(int k = 0; k < 4; k++){
@@ -422,35 +456,30 @@ int ecb_mode_encrypt() {
                 count++;
             }
         }
-        printTest();
+
         encrypt();
-        int count2=0;
+
 
         for(int j = 0; j < 4 ; j++){
             for(int k = 0; k < 4; k++){
-                output[count2] = matrix[k][j];
-                count2++;
+                output[count2++] = matrix[k][j];
+                //printf("j = %d, k= %d, cant = %d\n", j,k,count2);
             }
         }
+        printf("%d\n", sizeof(output)/sizeof(uint8_t));
 
-        for(int j = 0; j< size; j++){
-            printf("%02x ", output[j]);
-        }
+    }
+    for(int j = 0; j< count2; j++){
+        printf("%x ", output[j]);
     }
 
-    return 0;
 
+    return 0;
 }
 
 
 int main() {
     ecb_mode_encrypt();
-
-    /*printTest();
-    encrypt();
-    printTest();
-    decrypt();
-    printTest();*/
-    
+    ecb_mode_decrypt();
     return 0;
 }
