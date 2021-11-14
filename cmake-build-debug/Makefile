@@ -128,6 +128,54 @@ untitled/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/build
 .PHONY : untitled/fast
 
+decrypt.obj: decrypt.c.obj
+.PHONY : decrypt.obj
+
+# target to build an object file
+decrypt.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/decrypt.c.obj
+.PHONY : decrypt.c.obj
+
+decrypt.i: decrypt.c.i
+.PHONY : decrypt.i
+
+# target to preprocess a source file
+decrypt.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/decrypt.c.i
+.PHONY : decrypt.c.i
+
+decrypt.s: decrypt.c.s
+.PHONY : decrypt.s
+
+# target to generate assembly for a file
+decrypt.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/decrypt.c.s
+.PHONY : decrypt.c.s
+
+encrypt.obj: encrypt.c.obj
+.PHONY : encrypt.obj
+
+# target to build an object file
+encrypt.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/encrypt.c.obj
+.PHONY : encrypt.c.obj
+
+encrypt.i: encrypt.c.i
+.PHONY : encrypt.i
+
+# target to preprocess a source file
+encrypt.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/encrypt.c.i
+.PHONY : encrypt.c.i
+
+encrypt.s: encrypt.c.s
+.PHONY : encrypt.s
+
+# target to generate assembly for a file
+encrypt.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/encrypt.c.s
+.PHONY : encrypt.c.s
+
 main.obj: main.c.obj
 .PHONY : main.obj
 
@@ -152,6 +200,30 @@ main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/main.c.s
 .PHONY : main.c.s
 
+tests.obj: tests.c.obj
+.PHONY : tests.obj
+
+# target to build an object file
+tests.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/tests.c.obj
+.PHONY : tests.c.obj
+
+tests.i: tests.c.i
+.PHONY : tests.i
+
+# target to preprocess a source file
+tests.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/tests.c.i
+.PHONY : tests.c.i
+
+tests.s: tests.c.s
+.PHONY : tests.s
+
+# target to generate assembly for a file
+tests.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/tests.c.s
+.PHONY : tests.c.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -161,9 +233,18 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... untitled
+	@echo ... decrypt.obj
+	@echo ... decrypt.i
+	@echo ... decrypt.s
+	@echo ... encrypt.obj
+	@echo ... encrypt.i
+	@echo ... encrypt.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... tests.obj
+	@echo ... tests.i
+	@echo ... tests.s
 .PHONY : help
 
 

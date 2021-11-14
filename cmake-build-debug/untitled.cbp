@@ -76,7 +76,22 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/decrypt.c">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/decrypt.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/encrypt.c">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/encrypt.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/main.c">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/tests.c">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/CMakeLists.txt">

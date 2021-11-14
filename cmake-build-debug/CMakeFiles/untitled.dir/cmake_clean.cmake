@@ -1,5 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/untitled.dir/decrypt.c.obj"
+  "CMakeFiles/untitled.dir/encrypt.c.obj"
   "CMakeFiles/untitled.dir/main.c.obj"
+  "CMakeFiles/untitled.dir/tests.c.obj"
   "libuntitled.dll.a"
   "untitled.exe"
   "untitled.exe.manifest"

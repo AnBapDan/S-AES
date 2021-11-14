@@ -8,7 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "C:/Users/DanielAndrade/CLionProjects/untitled/decrypt.c" "C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/CMakeFiles/untitled.dir/decrypt.c.obj"
+  "C:/Users/DanielAndrade/CLionProjects/untitled/encrypt.c" "C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/CMakeFiles/untitled.dir/encrypt.c.obj"
   "C:/Users/DanielAndrade/CLionProjects/untitled/main.c" "C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/CMakeFiles/untitled.dir/main.c.obj"
+  "C:/Users/DanielAndrade/CLionProjects/untitled/tests.c" "C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/CMakeFiles/untitled.dir/tests.c.obj"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

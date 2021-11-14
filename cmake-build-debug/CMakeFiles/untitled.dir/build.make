@@ -78,19 +78,64 @@ CMakeFiles/untitled.dir/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/main.c.s"
 	C:\winbuilds\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\DanielAndrade\CLionProjects\untitled\main.c -o CMakeFiles\untitled.dir\main.c.s
 
+CMakeFiles/untitled.dir/encrypt.c.obj: CMakeFiles/untitled.dir/flags.make
+CMakeFiles/untitled.dir/encrypt.c.obj: ../encrypt.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\DanielAndrade\CLionProjects\untitled\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/untitled.dir/encrypt.c.obj"
+	C:\winbuilds\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\untitled.dir\encrypt.c.obj -c C:\Users\DanielAndrade\CLionProjects\untitled\encrypt.c
+
+CMakeFiles/untitled.dir/encrypt.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/encrypt.c.i"
+	C:\winbuilds\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\DanielAndrade\CLionProjects\untitled\encrypt.c > CMakeFiles\untitled.dir\encrypt.c.i
+
+CMakeFiles/untitled.dir/encrypt.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/encrypt.c.s"
+	C:\winbuilds\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\DanielAndrade\CLionProjects\untitled\encrypt.c -o CMakeFiles\untitled.dir\encrypt.c.s
+
+CMakeFiles/untitled.dir/decrypt.c.obj: CMakeFiles/untitled.dir/flags.make
+CMakeFiles/untitled.dir/decrypt.c.obj: ../decrypt.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\DanielAndrade\CLionProjects\untitled\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/untitled.dir/decrypt.c.obj"
+	C:\winbuilds\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\untitled.dir\decrypt.c.obj -c C:\Users\DanielAndrade\CLionProjects\untitled\decrypt.c
+
+CMakeFiles/untitled.dir/decrypt.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/decrypt.c.i"
+	C:\winbuilds\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\DanielAndrade\CLionProjects\untitled\decrypt.c > CMakeFiles\untitled.dir\decrypt.c.i
+
+CMakeFiles/untitled.dir/decrypt.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/decrypt.c.s"
+	C:\winbuilds\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\DanielAndrade\CLionProjects\untitled\decrypt.c -o CMakeFiles\untitled.dir\decrypt.c.s
+
+CMakeFiles/untitled.dir/tests.c.obj: CMakeFiles/untitled.dir/flags.make
+CMakeFiles/untitled.dir/tests.c.obj: ../tests.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\DanielAndrade\CLionProjects\untitled\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/untitled.dir/tests.c.obj"
+	C:\winbuilds\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\untitled.dir\tests.c.obj -c C:\Users\DanielAndrade\CLionProjects\untitled\tests.c
+
+CMakeFiles/untitled.dir/tests.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/tests.c.i"
+	C:\winbuilds\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\DanielAndrade\CLionProjects\untitled\tests.c > CMakeFiles\untitled.dir\tests.c.i
+
+CMakeFiles/untitled.dir/tests.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/tests.c.s"
+	C:\winbuilds\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\DanielAndrade\CLionProjects\untitled\tests.c -o CMakeFiles\untitled.dir\tests.c.s
+
 # Object files for target untitled
 untitled_OBJECTS = \
-"CMakeFiles/untitled.dir/main.c.obj"
+"CMakeFiles/untitled.dir/main.c.obj" \
+"CMakeFiles/untitled.dir/encrypt.c.obj" \
+"CMakeFiles/untitled.dir/decrypt.c.obj" \
+"CMakeFiles/untitled.dir/tests.c.obj"
 
 # External object files for target untitled
 untitled_EXTERNAL_OBJECTS =
 
 untitled.exe: CMakeFiles/untitled.dir/main.c.obj
+untitled.exe: CMakeFiles/untitled.dir/encrypt.c.obj
+untitled.exe: CMakeFiles/untitled.dir/decrypt.c.obj
+untitled.exe: CMakeFiles/untitled.dir/tests.c.obj
 untitled.exe: CMakeFiles/untitled.dir/build.make
 untitled.exe: CMakeFiles/untitled.dir/linklibs.rsp
 untitled.exe: CMakeFiles/untitled.dir/objects1.rsp
 untitled.exe: CMakeFiles/untitled.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\DanielAndrade\CLionProjects\untitled\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable untitled.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\DanielAndrade\CLionProjects\untitled\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable untitled.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\untitled.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
