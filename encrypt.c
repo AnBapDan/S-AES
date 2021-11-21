@@ -155,8 +155,6 @@ int offsetRoundKey(int round){
 
 }
 
-
-
 int SubBytes() {
 
     for (int i = 0; i < 4; i++) {
@@ -199,6 +197,44 @@ int ShiftRows() {
     return 0;
 }
 
+int S_ShiftRows(){
+    uint8_t tmp[4];
+    int first = randomizer(0,3);
+    int second = randomizer(0,3);
+    while(second == first){
+        second = randomizer(0,3);
+    }
+    int third = randomizer(0,3);
+    while(third == first || third == second){
+        third = randomizer(0,3);
+    }
+
+    //printf("\n/*****************/\n %d %d %d\n\n",first,second,third);
+    int offset = 3;
+    for(int i = 0; i<4;i++){
+       tmp[offset%4] = matrix[first][i];
+       offset++;
+    }
+    for(int i = 0; i<4; i++){
+        matrix[first][i] = tmp[i];
+    }
+    offset = 2;
+    for(int i = 0; i<4;i++){
+        tmp[offset%4] = matrix[second][i];
+        offset++;
+    }
+    for(int i = 0; i<4; i++){
+        matrix[second][i] = tmp[i];
+    }
+    offset=1;
+    for(int i = 0; i<4;i++){
+        tmp[offset%4] = matrix[third][i];
+        offset++;
+    }
+    for(int i = 0; i<4; i++){
+        matrix[third][i] = tmp[i];
+    }
+}
 //mixSingleColumn and MixColumns functions were retrieved from: https://github.com/amanske/aes-128/blob/master/aes.cpp
 
 /* Helper function for the mix columns step
@@ -261,6 +297,14 @@ int encrypt(initial matrixm, initial keym) {
     return 0;
 }
 
+
+void printTest() {
+    printf("%X %X %X %X \n", matrix[0][0], matrix[0][1], matrix[0][2], matrix[0][3]);
+    printf("%X %X %X %X \n", matrix[1][0], matrix[1][1], matrix[1][2], matrix[1][3]);
+    printf("%X %X %X %X \n", matrix[2][0], matrix[2][1], matrix[2][2], matrix[2][3]);
+    printf("%X %X %X %X \n\n", matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3]);
+}
+
 int encrypt_S(initial matrixm, initial keym) {
     memcpy(matrix,matrixm,sizeof (initial));
     memcpy(key,keym,sizeof (initial));
@@ -268,13 +312,18 @@ int encrypt_S(initial matrixm, initial keym) {
     createkeySchedule();
     offsetRoundKey(s_Round);
 
+
     /*AddRoundkeyE(0);
 
     for (int i = 1; i < 10; i++) {
-        SubBytes();
-        ShiftRows();
-        MixColumns();
-        AddRoundkeyE(i);
+        if(i == s_Round){
+            S_ShiftRows();
+        }else{
+            SubBytes();
+            ShiftRows();
+            MixColumns();
+            AddRoundkeyE(i);
+        }
     }
     //Last Round
     SubBytes();
