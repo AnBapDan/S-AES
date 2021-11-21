@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include "encrypt.h"
 
 typedef uint8_t initial[4][4];
@@ -124,6 +125,38 @@ int createkeySchedule() {
     return 0;
 }
 
+int randomizer(int min, int max){
+    return rand() % (max + 1 - min) + min;
+}
+
+
+int offsetRoundKey(int round){
+    int offset = randomizer(1,16);
+    printf("%d\n", offset);
+    uint8_t tempo[16];
+
+    //No need to offset
+    if(offset==16) return 0;
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j<4; j++) {
+            tempo[offset%16] = keySchedule[round][j][i];
+            offset++;
+        }
+    }
+
+    int count = 0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            keySchedule[round][j][i]= tempo[count];
+            count++;
+        }
+    }
+
+}
+
+
+
 int SubBytes() {
 
     for (int i = 0; i < 4; i++) {
@@ -221,11 +254,31 @@ int encrypt(initial matrixm, initial keym) {
         MixColumns();
         AddRoundkeyE(i);
     }
-
     //Last Round
     SubBytes();
     ShiftRows();
     AddRoundkeyE(10);
+    return 0;
+}
 
+int encrypt_S(initial matrixm, initial keym) {
+    memcpy(matrix,matrixm,sizeof (initial));
+    memcpy(key,keym,sizeof (initial));
+    int s_Round = randomizer(1,9);
+    createkeySchedule();
+    offsetRoundKey(s_Round);
+
+    /*AddRoundkeyE(0);
+
+    for (int i = 1; i < 10; i++) {
+        SubBytes();
+        ShiftRows();
+        MixColumns();
+        AddRoundkeyE(i);
+    }
+    //Last Round
+    SubBytes();
+    ShiftRows();
+    AddRoundkeyE(10);*/
     return 0;
 }
