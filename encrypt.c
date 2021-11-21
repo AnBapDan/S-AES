@@ -6,7 +6,7 @@ typedef uint8_t initial[4][4];
 static initial keySchedule[11];
 initial matrix;
 initial key;
-
+uint8_t sk_box[16][16];
 
 static const uint8_t rcon[10] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
 
@@ -28,6 +28,8 @@ static const uint8_t s_box[16][16] = {
         {0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf},
         {0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16}
 };
+
+
 
 int AddRoundkeyE(int round) {
     for (int i = 0; i < 4; i++) {
@@ -155,16 +157,50 @@ int offsetRoundKey(int round){
 
 }
 
+int S_SubBytes(){
+    int offset = randomizer(1,255);
+    uint8_t tmp[256];
+
+    for(int i = 0; i < 16; i++){
+        for(int j = 0; j < 16; j++){
+            tmp[offset%256]= s_box[j][i];
+            offset++;
+        }
+    }
+
+    int count = 0;
+    for(int i = 0; i < 16; i++){
+        for(int j = 0; j < 16; j++){
+            sk_box[i][j] = tmp[count];
+            count++;
+        }
+    }
+    /**for(int i = 0; i < 16; i++){
+        for(int j = 0; j < 16; j++){
+            printf("%x ", sk_box[i][j] );
+        }
+        printf("\n");
+    }***/
+
+    //Normal SubBytes
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            uint8_t x = (matrix[j][i] >> 4);
+            uint8_t y = (matrix[j][i] & 0x0f);
+            matrix[j][i] = sk_box[x][y];
+        }
+    }
+
+}
+
 int SubBytes() {
 
     for (int i = 0; i < 4; i++) {
-
         for (int j = 0; j < 4; j++) {
             uint8_t x = (matrix[j][i] >> 4);
             uint8_t y = (matrix[j][i] & 0x0f);
             matrix[j][i] = s_box[x][y];
         }
-
     }
     return 0;
 }
@@ -282,7 +318,6 @@ int S_MixColumns(){
 
     int offset = randomizer(0,4) * 4;   //easy way to shift all positions 4 times to reutilize the code from offset keyschedule
 
-
     uint8_t tempo[16];
 
     //No need to offset
@@ -341,15 +376,13 @@ int encrypt_S(initial matrixm, initial keym) {
     createkeySchedule();
     offsetRoundKey(s_Round);
 
-    printTest();
-    S_MixColumns();
-    printTest();
-
     /*AddRoundkeyE(0);
 
     for (int i = 1; i < 10; i++) {
         if(i == s_Round){
+            S_SubBytes();
             S_ShiftRows();
+            S_MixColumns();
         }else{
             SubBytes();
             ShiftRows();
