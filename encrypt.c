@@ -132,7 +132,7 @@ int randomizer(int min, int max){
 
 int offsetRoundKey(int round){
     int offset = randomizer(1,16);
-    printf("%d\n", offset);
+
     uint8_t tempo[16];
 
     //No need to offset
@@ -278,6 +278,35 @@ void MixColumns() {
     }
 }
 
+int S_MixColumns(){
+
+    int offset = randomizer(0,4) * 4;   //easy way to shift all positions 4 times to reutilize the code from offset keyschedule
+
+
+    uint8_t tempo[16];
+
+    //No need to offset
+    if(offset == 16 || offset == 0) return 0;
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j<4; j++) {
+            tempo[offset%16] = matrix[j][i];
+            offset++;
+        }
+    }
+
+    int count = 0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            matrix[j][i]= tempo[count];
+            count++;
+        }
+    }
+
+    MixColumns();
+}
+
+
 int encrypt(initial matrixm, initial keym) {
     memcpy(matrix,matrixm,sizeof (initial));
     memcpy(key,keym,sizeof (initial));
@@ -312,6 +341,9 @@ int encrypt_S(initial matrixm, initial keym) {
     createkeySchedule();
     offsetRoundKey(s_Round);
 
+    printTest();
+    S_MixColumns();
+    printTest();
 
     /*AddRoundkeyE(0);
 
