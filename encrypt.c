@@ -7,6 +7,13 @@ static initial keySchedule[11];
 initial matrix;
 initial key;
 uint8_t sk_box[16][16];
+//randoms
+int offsetsub;
+int offsetmix;   //easy way to shift all positions 4 times to reutilize the code from offset keyschedule
+int first;
+int second;
+int third;
+
 
 static const uint8_t rcon[10] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
 
@@ -29,6 +36,9 @@ static const uint8_t s_box[16][16] = {
         {0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16}
 };
 
+int randomizer(int min, int max){
+    return rand() % (max + 1 - min) + min;
+}
 
 
 int AddRoundkeyE(int round) {
@@ -127,11 +137,6 @@ int createkeySchedule() {
     return 0;
 }
 
-int randomizer(int min, int max){
-    return rand() % (max + 1 - min) + min;
-}
-
-
 int offsetRoundKey(int round){
     int offset = randomizer(1,16);
 
@@ -158,13 +163,13 @@ int offsetRoundKey(int round){
 }
 
 int S_SubBytes(){
-    int offset = randomizer(1,255);
+
     uint8_t tmp[256];
 
     for(int i = 0; i < 16; i++){
         for(int j = 0; j < 16; j++){
-            tmp[offset%256]= s_box[j][i];
-            offset++;
+            tmp[offsetsub%256]= s_box[j][i];
+            offsetsub++;
         }
     }
 
@@ -175,12 +180,6 @@ int S_SubBytes(){
             count++;
         }
     }
-    /**for(int i = 0; i < 16; i++){
-        for(int j = 0; j < 16; j++){
-            printf("%x ", sk_box[i][j] );
-        }
-        printf("\n");
-    }***/
 
     //Normal SubBytes
     for (int i = 0; i < 4; i++) {
@@ -235,15 +234,6 @@ int ShiftRows() {
 
 int S_ShiftRows(){
     uint8_t tmp[4];
-    int first = randomizer(0,3);
-    int second = randomizer(0,3);
-    while(second == first){
-        second = randomizer(0,3);
-    }
-    int third = randomizer(0,3);
-    while(third == first || third == second){
-        third = randomizer(0,3);
-    }
 
     //printf("\n/*****************/\n %d %d %d\n\n",first,second,third);
     int offset = 3;
@@ -316,17 +306,18 @@ void MixColumns() {
 
 int S_MixColumns(){
 
-    int offset = randomizer(0,4) * 4;   //easy way to shift all positions 4 times to reutilize the code from offset keyschedule
-
     uint8_t tempo[16];
 
     //No need to offset
-    if(offset == 16 || offset == 0) return 0;
+    if(offsetmix == 16 || offsetmix == 0){
+        MixColumns();
+        return 0;
+    }
 
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j<4; j++) {
-            tempo[offset%16] = matrix[j][i];
-            offset++;
+            tempo[offsetmix%16] = matrix[j][i];
+            offsetmix++;
         }
     }
 
@@ -341,6 +332,24 @@ int S_MixColumns(){
     MixColumns();
 }
 
+int randomValues(){
+    //subbytes
+    offsetsub = randomizer(1,255);
+    //shiftrows
+    first = randomizer(0,3);
+    second = randomizer(0,3);
+    while(second == first){
+        second = randomizer(0,3);
+    }
+    third = randomizer(0,3);
+    while(third == first || third == second){
+        third = randomizer(0,3);
+    }
+    //MixColumns
+    offsetmix = randomizer(0,4) * 4;   //easy way to shift all positions 4 times to reutilize the code from offset keyschedule
+    //printf("%d %d %d %d %d \n", offsetsub,first,second,third,offsetmix);
+    return 0;
+}
 
 int encrypt(initial matrixm, initial keym) {
     memcpy(matrix,matrixm,sizeof (initial));
@@ -358,15 +367,9 @@ int encrypt(initial matrixm, initial keym) {
     SubBytes();
     ShiftRows();
     AddRoundkeyE(10);
+
+    memcpy(matrixm, matrix, sizeof(initial));
     return 0;
-}
-
-
-void printTest() {
-    printf("%X %X %X %X \n", matrix[0][0], matrix[0][1], matrix[0][2], matrix[0][3]);
-    printf("%X %X %X %X \n", matrix[1][0], matrix[1][1], matrix[1][2], matrix[1][3]);
-    printf("%X %X %X %X \n", matrix[2][0], matrix[2][1], matrix[2][2], matrix[2][3]);
-    printf("%X %X %X %X \n\n", matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3]);
 }
 
 int encrypt_S(initial matrixm, initial keym) {
@@ -375,8 +378,9 @@ int encrypt_S(initial matrixm, initial keym) {
     int s_Round = randomizer(1,9);
     createkeySchedule();
     offsetRoundKey(s_Round);
+    randomValues();
 
-    /*AddRoundkeyE(0);
+    AddRoundkeyE(0);
 
     for (int i = 1; i < 10; i++) {
         if(i == s_Round){
@@ -387,12 +391,13 @@ int encrypt_S(initial matrixm, initial keym) {
             SubBytes();
             ShiftRows();
             MixColumns();
-            AddRoundkeyE(i);
         }
+        AddRoundkeyE(i);
     }
     //Last Round
     SubBytes();
     ShiftRows();
-    AddRoundkeyE(10);*/
+    AddRoundkeyE(10);
+    memcpy(matrixm, matrix, sizeof(initial));
     return 0;
 }

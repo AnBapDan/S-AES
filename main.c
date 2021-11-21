@@ -10,6 +10,7 @@ char salt = 0;
 uint8_t firstkey[KEY_LEN];
 int sizeoutput;
 int flag=0;
+uint8_t seed;
 
 typedef uint8_t initial[4][4];
 initial matrix;
@@ -18,12 +19,12 @@ initial key;
 
 void getKey(char *pwd);
 
-/*void printTest() {
+void printTest() {
     printf("%X %X %X %X \n", matrix[0][0], matrix[0][1], matrix[0][2], matrix[0][3]);
     printf("%X %X %X %X \n", matrix[1][0], matrix[1][1], matrix[1][2], matrix[1][3]);
     printf("%X %X %X %X \n", matrix[2][0], matrix[2][1], matrix[2][2], matrix[2][3]);
     printf("%X %X %X %X \n\n", matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3]);
-}*/
+}
 
 uint8_t *ecb_mode_decrypt(uint8_t *string, uint8_t size) {
     uint8_t *output = malloc(size * sizeof(uint8_t));
@@ -40,8 +41,13 @@ uint8_t *ecb_mode_decrypt(uint8_t *string, uint8_t size) {
                 count++;
             }
         }
+        if(flag){
+            decrypt_S(matrix,key);
+        }else{
+            decrypt(matrix, key);
+        }
 
-        decrypt(matrix, key);
+
         for (int j = 0; j < 4; j++) {
             if (count2 == size - padding) {
                 break;
@@ -114,11 +120,11 @@ uint8_t *ecb_mode_encrypt(char *string, uint8_t size) {
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 4; k++) {
                 output[count2++] = matrix[k][j];
-                //printf("j = %d, k= %d, cant = %d\n", j,k,count2);
             }
         }
     }
-    sizeoutput=count2;
+
+    sizeoutput = count2;
     return output;
 }
 
@@ -141,7 +147,7 @@ int main(int argc, char *argv[]) {
         flag = 1;
 
         //SK to fill the srand();
-        uint8_t seed = getSeed(argv[2]);
+        seed = getSeed(argv[2]);
         srand(seed);
 
         if (*argv[3] == 'D') {
@@ -183,7 +189,6 @@ int main(int argc, char *argv[]) {
             //input and size
             scanf("%s", string);
             size = strlen(string);
-
             result = ecb_mode_encrypt(string, size);
             for (int j = 0; j < sizeoutput; j++) {
                 printf("%x", result[j]);
@@ -195,14 +200,27 @@ int main(int argc, char *argv[]) {
             scanf("%s", string);
             size = strlen(string);
             result = ecb_mode_encrypt(string, size);
+
             for (int j = 0; j < sizeoutput; j++) {
                 printf("%x", result[j]);
             }
             printf("\n\n");
+            srand(seed);
+
             result = ecb_mode_decrypt(result, sizeoutput);
             for (int j = 0; j < sizeoutput; j++) {
                 printf("%c", result[j]);
             }
+
+            /*encrypt_S(matrix, key);
+            printTest();
+
+            printf("\n\n");
+            srand(seed);
+
+            decrypt_S(matrix, key);
+            printTest();*/
+
         }
         else {
             perror("Bad command usage. Try: ./a.out pwd (string) mode ( D , E or S) ");
@@ -231,14 +249,6 @@ int main(int argc, char *argv[]) {
             dec[j]= strtol(tmp, NULL, 16);
             j++;
         }
-
-
-        //printf("%s", string);
-
-        /*for (int j = 0; j < size; j++) {
-            printf("%x", dec[j]);
-        }
-        printf("\n\n%d\n\n\n",size);*/
 
         result = ecb_mode_decrypt(dec, size);
         for (int j = 0; j < sizeoutput; j++) {

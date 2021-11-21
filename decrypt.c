@@ -1,9 +1,19 @@
+#include <stdlib.h>
 #include "decrypt.h"
 
 typedef uint8_t initial[4][4];
 static initial keySchedule[11];
 initial matrix;
 initial key;
+
+//randoms
+int offsetsub;
+int offsetmix;   //easy way to shift all positions 4 times to reutilize the code from offset keyschedule
+int first;
+int second;
+int third;
+uint8_t sk_box[16][16];
+
 static const uint8_t rcon[10] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
 
 static const uint8_t s_box[16][16] = {
@@ -43,6 +53,40 @@ static const uint8_t invs_box[16][16] = {
         {0x60, 0x51, 0x7f, 0xa9, 0x19, 0xb5, 0x4a, 0x0d, 0x2d, 0xe5, 0x7a, 0x9f, 0x93, 0xc9, 0x9c, 0xef},
         {0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61},
         {0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d}};
+
+int randomizerD(int min, int max){
+    return rand() % (max + 1 - min) + min;
+}
+
+/*
+void printTest() {
+    printf("%X %X %X %X \n", matrix[0][0], matrix[0][1], matrix[0][2], matrix[0][3]);
+    printf("%X %X %X %X \n", matrix[1][0], matrix[1][1], matrix[1][2], matrix[1][3]);
+    printf("%X %X %X %X \n", matrix[2][0], matrix[2][1], matrix[2][2], matrix[2][3]);
+    printf("%X %X %X %X \n\n", matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3]);
+}
+*/
+
+int randomValuesD(){
+    //subbytes
+    offsetsub = randomizerD(1,255);
+    //shiftrows
+    first = randomizerD(0,3);
+    second = randomizerD(0,3);
+    while(second == first){
+        second = randomizerD(0,3);
+    }
+    third = randomizerD(0,3);
+    while(third == first || third == second){
+        third = randomizerD(0,3);
+    }
+    //MixColumns
+    offsetmix = randomizerD(0,4) * 4;   //easy way to shift all positions 4 times to reutilize the code from offset keyschedule
+
+    //printf("%d %d %d %d %d \n", offsetsub,first,second,third,offsetmix);
+
+    return 0;
+}
 
 int createKeySchedule() {
     //TODO put key automatically instead manual
@@ -130,6 +174,31 @@ int createKeySchedule() {
     return 0;
 }
 
+int offsetRoundKeyD(int round){
+    int offset = randomizerD(1,16);
+
+    uint8_t tempo[16];
+
+    //No need to offset
+    if(offset==16) return 0;
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j<4; j++) {
+            tempo[offset%16] = keySchedule[round][j][i];
+            offset++;
+        }
+    }
+
+    int count = 0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            keySchedule[round][j][i]= tempo[count];
+            count++;
+        }
+    }
+
+}
+
 int AddRoundKeyD(int round) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
@@ -149,6 +218,40 @@ int InvSubBytes() {
         }
     }
     return 0;
+}
+
+int S_InvSubBytes(){
+    uint8_t tmp[256];
+    uint8_t invtmp[256];
+    for(int i = 0; i < 16; i++){
+        for(int j = 0; j < 16; j++){
+            tmp[offsetsub%256]= s_box[j][i];
+            offsetsub++;
+        }
+    }
+
+    for (int i = 0; i < 256; i++)
+    {
+        invtmp[tmp[i]] = i;
+    }
+
+    int count = 0;
+    for(int i = 0; i < 16; i++){
+        for(int j = 0; j < 16; j++){
+            sk_box[i][j] = invtmp[count];
+            count++;
+        }
+    }
+
+    //Normal InvSubBytes
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            uint8_t x = (matrix[j][i] >> 4);
+            uint8_t y = (matrix[j][i] & 0x0f);
+            matrix[j][i] = sk_box[x][y];
+        }
+    }
+
 }
 
 int InvShiftRows() {
@@ -180,6 +283,38 @@ int InvShiftRows() {
 
 }
 
+int S_InvShiftRows(){
+    uint8_t tmp[4];
+
+    //printf("\n/*****************/\n %d %d %d\n\n",first,second,third);
+    int offset = 3;
+    for(int i = 0; i<4;i++){
+        tmp[offset%4] = matrix[third][i];
+        offset++;
+    }
+    for(int i = 0; i<4; i++){
+        matrix[third][i] = tmp[i];
+    }
+    offset = 2;
+    for(int i = 0; i<4;i++){
+        tmp[offset%4] = matrix[second][i];
+        offset++;
+    }
+    for(int i = 0; i<4; i++){
+        matrix[second][i] = tmp[i];
+    }
+    offset=1;
+    for(int i = 0; i<4;i++){
+        tmp[offset%4] = matrix[first][i];
+        offset++;
+    }
+    for(int i = 0; i<4; i++){
+        matrix[first][i] = tmp[i];
+    }
+
+    return 0;
+}
+
 // xtime, mult and InvMixColumns were adapted from this website: https://www.fourmilab.ch/javascrypt/javascrypt.html
 uint8_t xtime(int poly) {
     poly <<= 1;
@@ -208,6 +343,36 @@ void InvMixColumns() {
     }
 }
 
+int S_InvMixColumns(){
+    uint8_t tempo[16];
+
+    //No need to offset
+    if(offsetmix == 16 || offsetmix == 0){
+        InvMixColumns();
+        return 0;
+    }
+
+    offsetmix = 16 - offsetmix;
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j<4; j++) {
+            tempo[offsetmix%16] = matrix[j][i];
+            offsetmix++;
+        }
+    }
+
+    int count = 0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            matrix[j][i]= tempo[count];
+            count++;
+        }
+    }
+
+    InvMixColumns();
+    return 0;
+}
+
 int decrypt(initial matrixm, initial keym) {
 
     memcpy(matrix,matrixm,sizeof (initial));
@@ -226,26 +391,43 @@ int decrypt(initial matrixm, initial keym) {
     }
 
     AddRoundKeyD(0);
-
+    memcpy(matrixm, matrix, sizeof(initial));
     return 0;
 }
-///Another method to decrypt AES
-/*
-int decrypt2(){
+
+int decrypt_S(initial matrixm, initial keym) {
+    memcpy(matrix,matrixm,sizeof (initial));
+    memcpy(key,keym,sizeof (initial));
+
+    int s_Round = randomizerD(1,9);
     createKeySchedule();
-    AddRoundKey(10);
+    offsetRoundKeyD(s_Round);
+    randomValuesD();
 
-    for (int i = 9; i > 0; i--) {
-        InvShiftRows();
-        InvSubBytes();
-        AddRoundKey(i);
-        InvMixColumns();
-    }
-
+    AddRoundKeyD(10);
     InvShiftRows();
     InvSubBytes();
-    AddRoundKey(0);
 
+    for (int i = 9; i > 0; i--) {
+
+        AddRoundKeyD(i);
+        if(i == s_Round){
+
+            S_InvMixColumns();
+            S_InvShiftRows();
+            S_InvSubBytes();
+
+        }else{
+
+            InvMixColumns();
+            InvShiftRows();
+            InvSubBytes();
+
+        }
+    }
+    AddRoundKeyD(0);
+
+    memcpy(matrixm, matrix, sizeof(initial));
     return 0;
 }
-*/
+

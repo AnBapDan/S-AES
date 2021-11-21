@@ -6,6 +6,22 @@
 
 #IncludeRegexTransform: 
 
+C:/Users/DanielAndrade/CLionProjects/untitled/decrypt.c
+stdlib.h
+-
+decrypt.h
+C:/Users/DanielAndrade/CLionProjects/untitled/decrypt.h
+
+C:/Users/DanielAndrade/CLionProjects/untitled/decrypt.h
+stdint.h
+-
+stdio.h
+-
+string.h
+-
+tests.c
+C:/Users/DanielAndrade/CLionProjects/untitled/tests.c
+
 C:/Users/DanielAndrade/CLionProjects/untitled/encrypt.c
 stdlib.h
 -
@@ -21,6 +37,20 @@ string.h
 -
 tests.c
 C:/Users/DanielAndrade/CLionProjects/untitled/tests.c
+
+C:/Users/DanielAndrade/CLionProjects/untitled/main.c
+stdio.h
+-
+stdint.h
+-
+string.h
+-
+openssl/evp.h
+-
+encrypt.h
+C:/Users/DanielAndrade/CLionProjects/untitled/encrypt.h
+decrypt.h
+C:/Users/DanielAndrade/CLionProjects/untitled/decrypt.h
 
 C:/Users/DanielAndrade/CLionProjects/untitled/tests.c
 stdio.h
