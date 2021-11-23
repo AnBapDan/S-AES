@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <sys/timeb.h>
+#include <pthread_time.h>
 #include "decrypt.h"
 
 typedef uint8_t initial[4][4];
@@ -53,6 +55,9 @@ static const uint8_t invs_box[16][16] = {
         {0x60, 0x51, 0x7f, 0xa9, 0x19, 0xb5, 0x4a, 0x0d, 0x2d, 0xe5, 0x7a, 0x9f, 0x93, 0xc9, 0x9c, 0xef},
         {0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61},
         {0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d}};
+
+struct timespec startD;
+struct timespec finishD;
 
 int randomizerD(int min, int max){
     return rand() % (max + 1 - min) + min;
@@ -395,7 +400,7 @@ int decrypt(initial matrixm, initial keym) {
     return 0;
 }
 
-int decrypt_S(initial matrixm, initial keym) {
+int decrypt_S(initial matrixm, initial keym, unsigned long** tdecrypt) {
     memcpy(matrix,matrixm,sizeof (initial));
     memcpy(key,keym,sizeof (initial));
 
@@ -403,7 +408,7 @@ int decrypt_S(initial matrixm, initial keym) {
     createKeySchedule();
     offsetRoundKeyD(s_Round);
     randomValuesD();
-
+    clock_gettime( CLOCK_MONOTONIC, &startD );
     AddRoundKeyD(10);
     InvShiftRows();
     InvSubBytes();
@@ -426,7 +431,10 @@ int decrypt_S(initial matrixm, initial keym) {
         }
     }
     AddRoundKeyD(0);
+    clock_gettime( CLOCK_MONOTONIC, &finishD );
 
+    unsigned long elapsed = finishD.tv_nsec-startD.tv_nsec;
+    *tdecrypt=elapsed;
     memcpy(matrixm, matrix, sizeof(initial));
     return 0;
 }

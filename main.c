@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <string.h>
 #include <openssl/evp.h>
+#include <io.h>
+#include <fcntl.h>
 #include "encrypt.h"
 #include "decrypt.h"
 
@@ -9,13 +11,15 @@
 char salt = 0;
 uint8_t firstkey[KEY_LEN];
 int sizeoutput;
-int flag=0;
+int flag = 0;
 uint8_t seed;
-
 typedef uint8_t initial[4][4];
 initial matrix;
 initial key;
 
+
+unsigned long tencrypt;
+unsigned long tdecrypt;
 
 void getKey(char *pwd);
 
@@ -28,7 +32,6 @@ void printTest() {
 
 uint8_t *ecb_mode_decrypt(uint8_t *string, uint8_t size) {
     uint8_t *output = malloc(size * sizeof(uint8_t));
-    //TODO
     //insert string into matrix
 
     uint8_t padding;
@@ -41,9 +44,9 @@ uint8_t *ecb_mode_decrypt(uint8_t *string, uint8_t size) {
                 count++;
             }
         }
-        if(flag){
-            decrypt_S(matrix,key);
-        }else{
+        if (flag) {
+            decrypt_S(matrix, key, &tdecrypt);
+        } else {
             decrypt(matrix, key);
         }
 
@@ -60,7 +63,7 @@ uint8_t *ecb_mode_decrypt(uint8_t *string, uint8_t size) {
     }
     padding = output[size - 1];
 
-    sizeoutput=count2-padding;
+    sizeoutput = count2 - padding;
     return output;
 }
 
@@ -82,8 +85,8 @@ uint8_t getSeed(char *pwd) {//hashing key
     // The PBKDF2 generator of OpenSSL receives as input the number of byes to generate ,
     // instead of bits
     PKCS5_PBKDF2_HMAC_SHA1(pwd, -1, &salt, 1, 1000, sizeof(firstsk), firstsk);
-    for( int i = 0; i< KEY_LEN; i++){
-        seed+=firstsk[i];
+    for (int i = 0; i < KEY_LEN; i++) {
+        seed += firstsk[i];
     }
     return seed;
 }
@@ -110,9 +113,10 @@ uint8_t *ecb_mode_encrypt(char *string, uint8_t size) {
                 count++;
             }
         }
-        if(flag){
-            encrypt_S(matrix, key);
-        }else{
+        if (flag) {
+            encrypt_S(matrix, key, &tencrypt);
+
+        } else {
             encrypt(matrix, key);
         }
 
@@ -132,7 +136,7 @@ int main(int argc, char *argv[]) {
     // ./a.out pwd(string) mode ( D or E )
     ///Setup
     char string[4096];
-    char d[4096*2];
+    char d[4096 * 2];
     uint8_t dec[4112];
     getKey(argv[1]);
     uint8_t size;
@@ -142,7 +146,7 @@ int main(int argc, char *argv[]) {
 
     uint8_t *result;
 
-    if(argc == 4){
+    if (argc == 4) {
         //Change mode from AES to S-AES
         flag = 1;
 
@@ -152,22 +156,22 @@ int main(int argc, char *argv[]) {
 
         if (*argv[3] == 'D') {
             //input and size
-            scanf("%s",d);
-            size= 0;
-            while(d[size]!='\0'){
+            scanf("%s", d);
+            size = 0;
+            while (d[size] != '\0') {
                 size++;
             }
 
-            size = size/2;
+            size = size / 2;
 
-            char tmp [3];
-            tmp[2]= '\0';
+            char tmp[3];
+            tmp[2] = '\0';
             int j = 0;
 
-            for(int i = 0; i < size*2; i=i+2){
-                tmp[0]=d[i];
-                tmp[1]=d[i+1];
-                dec[j]= strtol(tmp, NULL, 16);
+            for (int i = 0; i < size * 2; i = i + 2) {
+                tmp[0] = d[i];
+                tmp[1] = d[i + 1];
+                dec[j] = strtol(tmp, NULL, 16);
                 j++;
             }
 
@@ -196,34 +200,26 @@ int main(int argc, char *argv[]) {
 
         }
         else if (*argv[3] == 'S') {
-            //input and size
-            scanf("%s", string);
-            size = strlen(string);
-            result = ecb_mode_encrypt(string, size);
-
-            for (int j = 0; j < sizeoutput; j++) {
-                printf("%x", result[j]);
+            unsigned long elapsed = ULLONG_MAX;
+            for (int i = 0; i < 100000; i++) {
+                int randomData = open("/dev/random", O_RDONLY);
+                ssize_t randomDataLen = 0;
+                while (randomDataLen < sizeof string) {
+                    ssize_t result = read(randomData, string + randomDataLen, (sizeof string) - randomDataLen);
+                    randomDataLen += result;
+                }
+                close(randomData);
+                size = 4096;
+                ecb_mode_encrypt(string, size);
+                srand(seed);
+                ecb_mode_decrypt(result, sizeoutput);
+                if (elapsed > tencrypt + tdecrypt) {
+                    elapsed = tencrypt + tdecrypt;
+                }
             }
-            printf("\n\n");
-            srand(seed);
-
-            result = ecb_mode_decrypt(result, sizeoutput);
-            for (int j = 0; j < sizeoutput; j++) {
-                printf("%c", result[j]);
-            }
-
-            /*encrypt_S(matrix, key);
-            printTest();
-
-            printf("\n\n");
-            srand(seed);
-
-            decrypt_S(matrix, key);
-            printTest();*/
-
-        }
-        else {
-            perror("Bad command usage. Try: ./a.out pwd (string) mode ( D , E or S) ");
+            printf("Elapsed time: %lu", elapsed);
+        } else {
+            perror("Bad command usage. Try: ./a.out Key SKey mode ( D , E or S) ");
         }
 
         return 0;
@@ -231,22 +227,22 @@ int main(int argc, char *argv[]) {
 
     if (*argv[2] == 'D') {
         //input and size
-        scanf("%s",d);
-        size= 0;
-        while(d[size]!='\0'){
+        scanf("%s", d);
+        size = 0;
+        while (d[size] != '\0') {
             size++;
         }
 
-        size = size/2;
+        size = size / 2;
 
-        char tmp [3];
-        tmp[2]= '\0';
+        char tmp[3];
+        tmp[2] = '\0';
         int j = 0;
 
-        for(int i = 0; i < size*2; i=i+2){
-            tmp[0]=d[i];
-            tmp[1]=d[i+1];
-            dec[j]= strtol(tmp, NULL, 16);
+        for (int i = 0; i < size * 2; i = i + 2) {
+            tmp[0] = d[i];
+            tmp[1] = d[i + 1];
+            dec[j] = strtol(tmp, NULL, 16);
             j++;
         }
 
@@ -255,8 +251,7 @@ int main(int argc, char *argv[]) {
             printf("%x", result[j]);
         }
 
-    }
-    else if (*argv[2] == 'E') {
+    } else if (*argv[2] == 'E') {
         //input and size
         scanf("%s", string);
         size = strlen(string);
@@ -266,12 +261,13 @@ int main(int argc, char *argv[]) {
             printf("%x", result[j]);
         }
 
-    }
-    else if (*argv[2] == 'S') {
+    } else if (*argv[2] == 'S') {
         //input and size
         scanf("%s", string);
         size = strlen(string);
+
         result = ecb_mode_encrypt(string, size);
+
         for (int j = 0; j < sizeoutput; j++) {
             printf("%x", result[j]);
         }
@@ -280,9 +276,8 @@ int main(int argc, char *argv[]) {
         for (int j = 0; j < sizeoutput; j++) {
             printf("%c", result[j]);
         }
-    }
-    else {
-        perror("Bad command usage. Try: ./a.out pwd (optional pwd2) mode( D , E or S) ");
+    } else {
+        perror("Bad command usage. Try: ./a.out Key SKey mode(D , E or S) ");
     }
 
     printf("\n\n");
