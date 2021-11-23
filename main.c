@@ -24,10 +24,10 @@ unsigned long tdecrypt;
 void getKey(char *pwd);
 
 void printTest() {
-    printf("%X %X %X %X \n", matrix[0][0], matrix[0][1], matrix[0][2], matrix[0][3]);
-    printf("%X %X %X %X \n", matrix[1][0], matrix[1][1], matrix[1][2], matrix[1][3]);
-    printf("%X %X %X %X \n", matrix[2][0], matrix[2][1], matrix[2][2], matrix[2][3]);
-    printf("%X %X %X %X \n\n", matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3]);
+    printf("%02x %02x %02x %02x \n", matrix[0][0], matrix[0][1], matrix[0][2], matrix[0][3]);
+    printf("%02x %02x %02x %02x \n", matrix[1][0], matrix[1][1], matrix[1][2], matrix[1][3]);
+    printf("%02x %02x %02x %02x \n", matrix[2][0], matrix[2][1], matrix[2][2], matrix[2][3]);
+    printf("%02x %02x %02x %02x \n\n", matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3]);
 }
 
 uint8_t *ecb_mode_decrypt(uint8_t *string, uint8_t size) {
@@ -44,6 +44,7 @@ uint8_t *ecb_mode_decrypt(uint8_t *string, uint8_t size) {
                 count++;
             }
         }
+
         if (flag) {
             decrypt_S(matrix, key, &tdecrypt);
         } else {
@@ -175,17 +176,10 @@ int main(int argc, char *argv[]) {
                 j++;
             }
 
-
-            //printf("%s", string);
-
-            /*for (int j = 0; j < size; j++) {
-                printf("%x", dec[j]);
-            }
-            printf("\n\n%d\n\n\n",size);*/
-
             result = ecb_mode_decrypt(dec, size);
+            printf("Decrypted: ");
             for (int j = 0; j < sizeoutput; j++) {
-                printf("%x", result[j]);
+                printf("%02x", result[j]);
             }
 
         }
@@ -194,8 +188,9 @@ int main(int argc, char *argv[]) {
             scanf("%s", string);
             size = strlen(string);
             result = ecb_mode_encrypt(string, size);
+            printf("Encrypted: ");
             for (int j = 0; j < sizeoutput; j++) {
-                printf("%x", result[j]);
+                printf("%02x", result[j]);
             }
 
         }
@@ -218,7 +213,8 @@ int main(int argc, char *argv[]) {
                 }
             }
             printf("Elapsed time: %lu", elapsed);
-        } else {
+        }
+        else {
             perror("Bad command usage. Try: ./a.out Key SKey mode ( D , E or S) ");
         }
 
@@ -245,38 +241,26 @@ int main(int argc, char *argv[]) {
             dec[j] = strtol(tmp, NULL, 16);
             j++;
         }
-
         result = ecb_mode_decrypt(dec, size);
+        printf("Decrypted: ");
         for (int j = 0; j < sizeoutput; j++) {
-            printf("%x", result[j]);
+            printf("%02x", result[j]);
         }
 
-    } else if (*argv[2] == 'E') {
+    }
+    else if (*argv[2] == 'E') {
         //input and size
         scanf("%s", string);
         size = strlen(string);
 
         result = ecb_mode_encrypt(string, size);
+        printf("Encrypted: ");
         for (int j = 0; j < sizeoutput; j++) {
-            printf("%x", result[j]);
+            printf("%02x", result[j]);
         }
 
-    } else if (*argv[2] == 'S') {
-        //input and size
-        scanf("%s", string);
-        size = strlen(string);
-
-        result = ecb_mode_encrypt(string, size);
-
-        for (int j = 0; j < sizeoutput; j++) {
-            printf("%x", result[j]);
-        }
-        printf("\n\n");
-        result = ecb_mode_decrypt(result, sizeoutput);
-        for (int j = 0; j < sizeoutput; j++) {
-            printf("%c", result[j]);
-        }
-    } else {
+    }
+    else {
         perror("Bad command usage. Try: ./a.out Key SKey mode(D , E or S) ");
     }
 
