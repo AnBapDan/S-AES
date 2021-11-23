@@ -261,7 +261,7 @@ int main(int argc, char *argv[]) {
 
     }
     else {
-        perror("Bad command usage. Try: ./a.out Key SKey mode(D , E or S) ");
+        perror("Bad command usage. Try: ./a.out Key SKey mode(D , E) ");
     }
 
     printf("\n\n");

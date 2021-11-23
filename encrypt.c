@@ -380,11 +380,12 @@ int encrypt_S(initial matrixm, initial keym,unsigned long** tencrypt) {
     memcpy(matrix,matrixm,sizeof (initial));
     memcpy(key,keym,sizeof (initial));
     int s_Round = randomizer(1,9);
+    clock_gettime(CLOCK_MONOTONIC, &startE );
     createkeySchedule();
     offsetRoundKey(s_Round);
     randomValues();
 
-    clock_gettime( CLOCK_MONOTONIC, &startE );
+
     AddRoundkeyE(0);
     for (int i = 1; i < 10; i++) {
         if(i == s_Round){
@@ -403,8 +404,8 @@ int encrypt_S(initial matrixm, initial keym,unsigned long** tencrypt) {
     ShiftRows();
     AddRoundkeyE(10);
     clock_gettime( CLOCK_MONOTONIC, &finishE );
-
-    *tencrypt= (unsigned long)(finishE.tv_nsec-startE.tv_nsec);
+    unsigned long elapsed= (finishE.tv_nsec-startE.tv_nsec);
+    *tencrypt=elapsed;
 
     memcpy(matrixm, matrix, sizeof(initial));
     return 0;

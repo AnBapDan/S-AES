@@ -1,6 +1,6 @@
+
+#include <time.h>
 #include <stdlib.h>
-#include <sys/timeb.h>
-#include <pthread_time.h>
 #include "decrypt.h"
 
 typedef uint8_t initial[4][4];
@@ -405,10 +405,12 @@ int decrypt_S(initial matrixm, initial keym, unsigned long** tdecrypt) {
     memcpy(key,keym,sizeof (initial));
 
     int s_Round = randomizerD(1,9);
+    clock_gettime( CLOCK_MONOTONIC, &startD );
     createKeySchedule();
     offsetRoundKeyD(s_Round);
     randomValuesD();
-    clock_gettime( CLOCK_MONOTONIC, &startD );
+
+
     AddRoundKeyD(10);
     InvShiftRows();
     InvSubBytes();
@@ -431,7 +433,7 @@ int decrypt_S(initial matrixm, initial keym, unsigned long** tdecrypt) {
         }
     }
     AddRoundKeyD(0);
-    clock_gettime( CLOCK_MONOTONIC, &finishD );
+    clock_gettime(CLOCK_MONOTONIC, &finishD);
 
     unsigned long elapsed = finishD.tv_nsec-startD.tv_nsec;
     *tdecrypt=elapsed;
