@@ -17,7 +17,7 @@ typedef uint8_t initial[4][4];
 initial matrix;
 initial key;
 
-
+unsigned long sum;
 unsigned long tencrypt;
 unsigned long tdecrypt;
 
@@ -30,7 +30,8 @@ void printTest() {
     printf("%02x %02x %02x %02x \n\n", matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3]);
 }
 
-uint8_t *ecb_mode_decrypt(uint8_t *string, uint8_t size) {
+uint8_t *ecb_mode_decrypt(uint8_t *string, int size) {
+
     uint8_t *output = malloc(size * sizeof(uint8_t));
     //insert string into matrix
 
@@ -40,6 +41,7 @@ uint8_t *ecb_mode_decrypt(uint8_t *string, uint8_t size) {
     for (int i = 0; i < size / 16; i++) {
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 4; k++) {
+
                 matrix[k][j] = string[count];
                 count++;
             }
@@ -47,6 +49,8 @@ uint8_t *ecb_mode_decrypt(uint8_t *string, uint8_t size) {
 
         if (flag) {
             decrypt_S(matrix, key, &tdecrypt);
+            sum+=tdecrypt;
+
         } else {
             decrypt(matrix, key);
         }
@@ -63,7 +67,6 @@ uint8_t *ecb_mode_decrypt(uint8_t *string, uint8_t size) {
         }
     }
     padding = output[size - 1];
-
     sizeoutput = count2 - padding;
     return output;
 }
@@ -92,7 +95,7 @@ uint8_t getSeed(char *pwd) {//hashing key
     return seed;
 }
 
-uint8_t *ecb_mode_encrypt(char *string, uint8_t size) {
+uint8_t *ecb_mode_encrypt(char *string, int size) {
 
     ///add PKCS#7
     uint8_t padding = 16 - (size % 16);
@@ -102,11 +105,13 @@ uint8_t *ecb_mode_encrypt(char *string, uint8_t size) {
     }
 
     ///insert string into matrix
-    size = strlen(string);
+    size=strlen(string);
     uint8_t *output = malloc((size - 1) * sizeof(uint8_t));
+
 
     int count = 0;
     int count2 = 0;
+
     for (int i = 0; i < size / 16; i++) {
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 4; k++) {
@@ -115,7 +120,9 @@ uint8_t *ecb_mode_encrypt(char *string, uint8_t size) {
             }
         }
         if (flag) {
+
             encrypt_S(matrix, key, &tencrypt);
+            sum += tencrypt;
 
         } else {
             encrypt(matrix, key);
@@ -128,7 +135,6 @@ uint8_t *ecb_mode_encrypt(char *string, uint8_t size) {
             }
         }
     }
-
     sizeoutput = count2;
     return output;
 }
@@ -140,10 +146,7 @@ int main(int argc, char *argv[]) {
     char d[4096 * 2];
     uint8_t dec[4112];
     getKey(argv[1]);
-    uint8_t size;
-
-    printf("Text: ");
-    printf("\n");
+    int size;
 
     uint8_t *result;
 
@@ -156,6 +159,7 @@ int main(int argc, char *argv[]) {
         srand(seed);
 
         if (*argv[3] == 'D') {
+            printf("Text: ");
             //input and size
             scanf("%s", d);
             size = 0;
@@ -184,6 +188,7 @@ int main(int argc, char *argv[]) {
 
         }
         else if (*argv[3] == 'E') {
+            printf("Text: ");
             //input and size
             scanf("%s", string);
             size = strlen(string);
@@ -195,24 +200,22 @@ int main(int argc, char *argv[]) {
 
         }
         else if (*argv[3] == 'S') {
-            unsigned long elapsed = ULLONG_MAX;
+            unsigned long min = ULLONG_MAX;
             for (int i = 0; i < 100000; i++) {
-                int randomData = open("/dev/random", O_RDONLY);
-                ssize_t randomDataLen = 0;
-                while (randomDataLen < sizeof string) {
-                    ssize_t result = read(randomData, string + randomDataLen, (sizeof string) - randomDataLen);
-                    randomDataLen += result;
-                }
-                close(randomData);
-                size = 4096;
-                ecb_mode_encrypt(string, size);
+                sum=0;
+                FILE * stream;
+                stream = fopen("C:\\Users\\DanielAndrade\\CLionProjects\\untitled\\test.txt", "r");
+                int count = fread(&string, sizeof(char), 4096, stream);
+                fclose(stream);
+                result=ecb_mode_encrypt(string, 4096);
                 srand(seed);
                 ecb_mode_decrypt(result, sizeoutput);
-                if (elapsed > tencrypt + tdecrypt) {
-                    elapsed = tencrypt + tdecrypt;
+
+                if (min > sum) {
+                    min = sum;
                 }
             }
-            printf("Elapsed time: %lu", elapsed);
+            printf("Elapsed time: %lu", min);
         }
         else {
             perror("Bad command usage. Try: ./a.out Key SKey mode ( D , E or S) ");
@@ -220,7 +223,7 @@ int main(int argc, char *argv[]) {
 
         return 0;
     }
-
+    printf("Text: ");
     if (*argv[2] == 'D') {
         //input and size
         scanf("%s", d);
@@ -252,7 +255,6 @@ int main(int argc, char *argv[]) {
         //input and size
         scanf("%s", string);
         size = strlen(string);
-
         result = ecb_mode_encrypt(string, size);
         printf("Encrypted: ");
         for (int j = 0; j < sizeoutput; j++) {
