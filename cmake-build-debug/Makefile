@@ -116,24 +116,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named untitled
+# Target rules for targets named output
 
 # Build rule for target.
-untitled: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 untitled
-.PHONY : untitled
+output: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 output
+.PHONY : output
 
 # fast build rule for target.
-untitled/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/build
-.PHONY : untitled/fast
+output/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/build
+.PHONY : output/fast
 
 decrypt.obj: decrypt.c.obj
 .PHONY : decrypt.obj
 
 # target to build an object file
 decrypt.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/decrypt.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/decrypt.c.obj
 .PHONY : decrypt.c.obj
 
 decrypt.i: decrypt.c.i
@@ -141,7 +141,7 @@ decrypt.i: decrypt.c.i
 
 # target to preprocess a source file
 decrypt.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/decrypt.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/decrypt.c.i
 .PHONY : decrypt.c.i
 
 decrypt.s: decrypt.c.s
@@ -149,7 +149,7 @@ decrypt.s: decrypt.c.s
 
 # target to generate assembly for a file
 decrypt.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/decrypt.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/decrypt.c.s
 .PHONY : decrypt.c.s
 
 encrypt.obj: encrypt.c.obj
@@ -157,7 +157,7 @@ encrypt.obj: encrypt.c.obj
 
 # target to build an object file
 encrypt.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/encrypt.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/encrypt.c.obj
 .PHONY : encrypt.c.obj
 
 encrypt.i: encrypt.c.i
@@ -165,7 +165,7 @@ encrypt.i: encrypt.c.i
 
 # target to preprocess a source file
 encrypt.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/encrypt.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/encrypt.c.i
 .PHONY : encrypt.c.i
 
 encrypt.s: encrypt.c.s
@@ -173,7 +173,7 @@ encrypt.s: encrypt.c.s
 
 # target to generate assembly for a file
 encrypt.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/encrypt.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/encrypt.c.s
 .PHONY : encrypt.c.s
 
 main.obj: main.c.obj
@@ -181,7 +181,7 @@ main.obj: main.c.obj
 
 # target to build an object file
 main.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/main.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/main.c.obj
 .PHONY : main.c.obj
 
 main.i: main.c.i
@@ -189,7 +189,7 @@ main.i: main.c.i
 
 # target to preprocess a source file
 main.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/main.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/main.c.i
 .PHONY : main.c.i
 
 main.s: main.c.s
@@ -197,7 +197,7 @@ main.s: main.c.s
 
 # target to generate assembly for a file
 main.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/main.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/main.c.s
 .PHONY : main.c.s
 
 tests.obj: tests.c.obj
@@ -205,7 +205,7 @@ tests.obj: tests.c.obj
 
 # target to build an object file
 tests.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/tests.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/tests.c.obj
 .PHONY : tests.c.obj
 
 tests.i: tests.c.i
@@ -213,7 +213,7 @@ tests.i: tests.c.i
 
 # target to preprocess a source file
 tests.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/tests.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/tests.c.i
 .PHONY : tests.c.i
 
 tests.s: tests.c.s
@@ -221,7 +221,7 @@ tests.s: tests.c.s
 
 # target to generate assembly for a file
 tests.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/tests.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\output.dir\build.make CMakeFiles/output.dir/tests.c.s
 .PHONY : tests.c.s
 
 # Help Target
@@ -232,7 +232,7 @@ help:
 	@echo ... depend
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... untitled
+	@echo ... output
 	@echo ... decrypt.obj
 	@echo ... decrypt.i
 	@echo ... decrypt.s

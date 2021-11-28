@@ -17,49 +17,49 @@
 					<DistClean command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="output">
+				<Option output="C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/output.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/winbuilds/include"/>
+					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/include"/>
+					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/include-fixed"/>
+					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/../../../../i686-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 output"/>
+					<CompileFile command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="output/fast">
+				<Option output="C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/output.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/winbuilds/include"/>
+					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/include"/>
+					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/include-fixed"/>
+					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/../../../../i686-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 output/fast"/>
+					<CompileFile command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="edit_cache">
 				<Option working_dir="C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
 					<Build command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="untitled">
-				<Option output="C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/untitled.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="C:/winbuilds/include"/>
-					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/include"/>
-					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/include-fixed"/>
-					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/../../../../i686-w64-mingw32/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 untitled"/>
-					<CompileFile command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="untitled/fast">
-				<Option output="C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/untitled.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="C:/winbuilds/include"/>
-					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/include"/>
-					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/include-fixed"/>
-					<Add directory="c:\winbuilds\bin\../lib/gcc/i686-w64-mingw32/4.8.3/../../../../i686-w64-mingw32/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 untitled/fast"/>
 					<CompileFile command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="C:/winbuilds/bin/mingw32-make.exe -f &quot;C:/Users/DanielAndrade/CLionProjects/untitled/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -77,22 +77,22 @@
 			</Target>
 		</Build>
 		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/decrypt.c">
-			<Option target="untitled"/>
+			<Option target="output"/>
 		</Unit>
 		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/decrypt.h">
-			<Option target="untitled"/>
+			<Option target="output"/>
 		</Unit>
 		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/encrypt.c">
-			<Option target="untitled"/>
+			<Option target="output"/>
 		</Unit>
 		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/encrypt.h">
-			<Option target="untitled"/>
+			<Option target="output"/>
 		</Unit>
 		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/main.c">
-			<Option target="untitled"/>
+			<Option target="output"/>
 		</Unit>
 		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/tests.c">
-			<Option target="untitled"/>
+			<Option target="output"/>
 		</Unit>
 		<Unit filename="C:/Users/DanielAndrade/CLionProjects/untitled/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>

@@ -2,8 +2,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <openssl/evp.h>
-#include <io.h>
-#include <fcntl.h>
 #include "encrypt.h"
 #include "decrypt.h"
 
@@ -201,7 +199,7 @@ int main(int argc, char *argv[]) {
         }
         else if (*argv[3] == 'S') {
             unsigned long min = ULLONG_MAX;
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < 1; i++) {
                 sum=0;
                 FILE * stream;
                 stream = fopen("C:\\Users\\DanielAndrade\\CLionProjects\\untitled\\test.txt", "r");

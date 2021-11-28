@@ -1,6 +1,5 @@
-
 #include <stdlib.h>
-#include <pthread_time.h>
+#include <time.h>
 #include "encrypt.h"
 
 typedef uint8_t initial[4][4];
