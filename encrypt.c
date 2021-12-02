@@ -54,7 +54,7 @@ int AddRoundkeyE(int round) {
 }
 
 int createkeySchedule() {
-    //TODO put key automatically instead manual
+
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             keySchedule[0][j][i] = key[j][i];

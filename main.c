@@ -4,6 +4,7 @@
 #include <openssl/evp.h>
 #include "encrypt.h"
 #include "decrypt.h"
+#include "wmmintrin.h"
 
 #define KEY_LEN 16 /* bytes */
 char salt = 0;
@@ -14,6 +15,9 @@ uint8_t seed;
 typedef uint8_t initial[4][4];
 initial matrix;
 initial key;
+
+
+
 
 unsigned long sum;
 unsigned long tencrypt;
